@@ -21,6 +21,7 @@ public class BossDeath : Boss
 
     public SpriteAnimator winAnim;
     public List<Sprite> winSprites;
+    public int reward;
 
 
     public int PhaseCount {get{
@@ -193,6 +194,9 @@ public class BossDeath : Boss
             yield return 0;
         }
         yield return new WaitForSeconds(1f);
+        int currentScore = Models.Score;
+        Models.Score = currentScore + reward;
+        Debug.Log(Models.Score);
         restartButton.SetActive(true);
 
     }

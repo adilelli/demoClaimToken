@@ -9,6 +9,7 @@ public class BossSickness : Boss
     public Transform bossBody;
     public GameObject nextBoss;
     public SpriteRenderer lineBeep, bkg;
+    public int reward;
    
  private void Awake() {
         StartCoroutine(AppearRoutine());
@@ -73,6 +74,9 @@ public class BossSickness : Boss
             lineBeep.transform.position = Vector3.Lerp(new Vector3(-1.59f, 0,0), new Vector3(1.59f, 0,0), i);
             yield return 0;
         }
+        int currentScore = Models.Score;
+        Models.Score = currentScore + reward;
+        Debug.Log(Models.Score);
         nextBoss.SetActive(true);
         bkg.enabled = false;
         for (float i = 0; i < 1f; i+= Time.deltaTime*0.5f)

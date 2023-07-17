@@ -16,6 +16,8 @@ public class BossForget : Boss
     public SpriteRenderer holeRenderer;
     public GameObject groundFloor;
     public GameObject nextBoss;
+    public int reward;
+
 
 
     public bool necklaceOpen = false;
@@ -106,6 +108,9 @@ public class BossForget : Boss
         headRenderer.sprite = headStates[1];
         GM.Player.transform.position = Vector3.up * 2f;
         groundFloor.SetActive(true);
+        int currentScore = Models.Score;
+        Models.Score = currentScore + reward;
+        Debug.Log(Models.Score);
         nextBoss.SetActive(true);
         gameObject.SetActive(false);
     }

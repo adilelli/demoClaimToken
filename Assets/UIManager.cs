@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour
 
     public AudioClip firstMusic;
     public AudioClip deathSound;
+    public GameObject claimbutton;
 
     public void ShowDeathUI(){
         foreach (GameObject boss in GM.I.bosses)
@@ -27,6 +29,8 @@ public class UIManager : MonoBehaviour
     public void DeathUIShown(){
         GM.Audio.SFX(deathSound);
         deathRestartButton.SetActive(true);
+        claimbutton.SetActive(true);
+        claimbutton.GetComponent<Button>().onClick.AddListener(DisableButton);
     }
 
     public void Restart(){
@@ -38,5 +42,10 @@ public class UIManager : MonoBehaviour
         GM.Player.health.gameObject.SetActive(true);
         GM.Audio.SetMusic(firstMusic);
         firstBoss.StartGame();
+    }
+
+    private void DisableButton()
+    {
+        claimbutton.SetActive(false);
     }
 }
