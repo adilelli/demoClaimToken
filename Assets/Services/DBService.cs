@@ -11,10 +11,11 @@ public class DBService : MonoBehaviour
     {
 		JSONObject json = new JSONObject();
 		json.Add("tokenID", tokenId);
+		json.Add("user", userId);
 		string jsonBody = json.ToString();
 		Debug.Log(jsonBody);
 
-		UnityWebRequest request = UnityWebRequest.Put($"{apiUrl}/{gameId}/{userId}/login", jsonBody);
+		UnityWebRequest request = UnityWebRequest.Put($"{apiUrl}/{gameId}/login", jsonBody);
 		request.SetRequestHeader("Content-Type", "application/json");
         // Convert the request body to a byte array
 		//request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
