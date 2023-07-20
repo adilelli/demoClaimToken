@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public AudioClip firstMusic;
     public AudioClip deathSound;
     public GameObject claimbutton;
+    public Utils utils;
 
     public void ShowDeathUI(){
         foreach (GameObject boss in GM.I.bosses)
@@ -42,6 +43,9 @@ public class UIManager : MonoBehaviour
         GM.Player.health.gameObject.SetActive(true);
         GM.Audio.SetMusic(firstMusic);
         firstBoss.StartGame();
+        utils = gameObject.AddComponent<Utils>();
+        utils.UserLogin();
+
     }
 
     private void DisableButton()

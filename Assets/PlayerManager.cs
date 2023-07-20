@@ -15,6 +15,7 @@ public class PlayerManager : MonoBehaviour
     public PlayerAnimator anim;
     public PlayerHit hit;
     public PlayerHP health;
+    public Utils utils;
     internal void Hurt(Vector2 direction)
     {
         if(movement.knockBack <= 0 && state.currentState != PlayerState.DEAD){
@@ -36,5 +37,7 @@ public class PlayerManager : MonoBehaviour
         anim.DieAnim();
         state.UpdateState(PlayerState.DEAD);
         movement.enabled = false;
+        utils = gameObject.AddComponent<Utils>();
+        utils.EndGameSession(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score);
     }
 }

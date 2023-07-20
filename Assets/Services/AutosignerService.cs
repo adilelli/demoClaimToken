@@ -10,7 +10,30 @@ public class AutosignerService : MonoBehaviour
     public IEnumerator GetUser(string Auth, System.Action<string> callback)
     {
 
-		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl}/users/{Auth}");
+		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl2}/users/{Auth}");
+		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
+		yield return request.SendWebRequest();
+
+		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+		{
+			Debug.Log(Auth);
+			Debug.LogError(request.error, this);
+			string username = null;
+			callback.Invoke(username);
+		}
+		else
+		{
+			var jsonData = JSON.Parse(request.downloadHandler.text);
+			string username = jsonData["username"];
+			Debug.Log(username);
+			callback.Invoke(username);
+        }
+    }
+
+	public IEnumerator GetUserMainnet(string Auth, System.Action<string> callback)
+    {
+
+		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl1}/users/{Auth}");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 		yield return request.SendWebRequest();
 
@@ -32,7 +55,28 @@ public class AutosignerService : MonoBehaviour
     // ClaimToken when hash is empty
     public IEnumerator DistributeToken(string auth, int amount, System.Action<string> callback){
 		Debug.Log("jj");
-		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl}/transactions/distribute?TokenId={Credentials.TokenId}&Amount={amount}&Auth={auth}", new WWWForm());
+		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl2}/transactions/distribute?TokenId={Credentials.TokenId}&Amount={amount}&Auth={auth}", new WWWForm());
+		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
+
+		yield return request.SendWebRequest();
+		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+		{
+			Debug.LogError(request.error);
+			string hash = null;
+			callback.Invoke(hash);
+		}
+		else
+		{
+			var jsonData = JSON.Parse(request.downloadHandler.text);
+            string hash = jsonData["viewModel"]["hash"];
+            Debug.Log("Txn hash: " + hash);
+			callback.Invoke(hash);
+		}	
+    }
+
+	public IEnumerator DistributeTokenMainnet(string auth, int amount, System.Action<string> callback){
+		Debug.Log("jj");
+		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl1}/transactions/distribute?TokenId={Credentials.TokenId}&Amount={amount}&Auth={auth}", new WWWForm());
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 
 		yield return request.SendWebRequest();

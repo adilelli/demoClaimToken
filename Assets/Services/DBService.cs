@@ -17,8 +17,6 @@ public class DBService : MonoBehaviour
 
 		UnityWebRequest request = UnityWebRequest.Put($"{apiUrl}/{gameId}/login", jsonBody);
 		request.SetRequestHeader("Content-Type", "application/json");
-        // Convert the request body to a byte array
-		//request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
 
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
@@ -33,9 +31,9 @@ public class DBService : MonoBehaviour
 		}
     } 
     
-    public IEnumerator GetUserGameId(string apiUrl, string gameId, string userId, string autosignerUrl, System.Action<string> callback)
+    public IEnumerator GetUserGameId(string apiUrl, string gameId, string userId, string autosignerUrl2, System.Action<string> callback)
     {
-		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}?autosignerUrl={autosignerUrl}&hash=");
+		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}?autosignerUrl={autosignerUrl2}&hash=");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
 
 		yield return request.SendWebRequest();
@@ -47,14 +45,14 @@ public class DBService : MonoBehaviour
 		{
 			var jsonData = JSON.Parse(request.downloadHandler.text);
 			string username = jsonData["username"];
-			Debug.Log("user: "+jsonData);
+			Debug.Log("user: " + jsonData);
 			callback.Invoke(jsonData);
 		}
     }   
 
-    public IEnumerator GetCheckClaimStatus(string apiUrl, string gameId, string userId, string autosignerUrl)
+    public IEnumerator GetCheckClaimStatus(string apiUrl, string gameId, string userId, string autosignerUrl2)
     {
-		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}/claimstatus?autosigner_url={autosignerUrl}");
+		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}/claimstatus?autosigner_url={autosignerUrl2}");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
 
 		yield return request.SendWebRequest();
@@ -100,7 +98,7 @@ public class DBService : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log("success");
+			Debug.Log("success, hash = " + hash);
 		}
     } 
 
