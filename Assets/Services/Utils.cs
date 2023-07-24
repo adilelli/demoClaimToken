@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using SimpleJSON;
 
 
 // Tokenization Controller
@@ -9,6 +10,7 @@ public class Utils : MonoBehaviour
 {
     string id;
     public GameObject ClaimButton;
+    // public GameObject ConfirmClaim;
     private AutosignerService asign;
     private DBService db;
     private Auth getAuth;
@@ -36,6 +38,7 @@ public class Utils : MonoBehaviour
 
     public void ClaimToken()
     {
+        // ConfirmClaim.SetActive(true);
         Debug.Log(Models.Hash);
         if(Models.Hash == null){
             asign = gameObject.AddComponent<AutosignerService>();
@@ -88,6 +91,15 @@ public class Utils : MonoBehaviour
         Credentials.dbBearer = token;
         Debug.Log(Credentials.dbBearer);
         StartCoroutine(db.GetCheckClaimStatus(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.autosignerUrl2));
+        StartCoroutine(db.GetUserGameId(Credentials.dbUrl, Credentials.GameId, Models.UserId, OnGettingUserInfo));
+    }
+
+    private void OnGettingUserInfo(string response)
+    {
+        var objectResponse = JSON.Parse(response);
+		int score = objectResponse["b_Score"]["d_TotalScore"];
+        //Models.Score = score;
+        Debug.Log(Models.Score);
     }
 
     

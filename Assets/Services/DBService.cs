@@ -31,9 +31,9 @@ public class DBService : MonoBehaviour
 		}
     } 
     
-    public IEnumerator GetUserGameId(string apiUrl, string gameId, string userId, string autosignerUrl2, System.Action<string> callback)
+    public IEnumerator GetUserGameId(string apiUrl, string gameId, string userId, System.Action<string> callback)
     {
-		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}?autosignerUrl={autosignerUrl2}&hash=");
+		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
 
 		yield return request.SendWebRequest();
@@ -43,10 +43,7 @@ public class DBService : MonoBehaviour
 		}
 		else
 		{
-			var jsonData = JSON.Parse(request.downloadHandler.text);
-			string username = jsonData["username"];
-			Debug.Log("user: " + jsonData);
-			callback.Invoke(jsonData);
+			callback.Invoke(request.downloadHandler.text);
 		}
     }   
 

@@ -75,8 +75,8 @@ public class AutosignerService : MonoBehaviour
     }
 
 	public IEnumerator DistributeTokenMainnet(string auth, int amount, System.Action<string> callback){
-		Debug.Log("jj");
-		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl1}/transactions/distribute?TokenId={Credentials.TokenId}&Amount={amount}&Auth={auth}", new WWWForm());
+		Debug.Log(amount);
+		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl1}/transactions/distribute?TokenId={Credentials.mainnetTokenId}&Amount={amount}&Auth={auth}", new WWWForm());
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 
 		yield return request.SendWebRequest();
