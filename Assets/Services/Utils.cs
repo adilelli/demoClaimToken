@@ -117,7 +117,7 @@ public class Utils : MonoBehaviour
     {
         Credentials.dbBearer = token;
         Debug.Log(Credentials.dbBearer);
-        StartCoroutine(db.GetCheckClaimStatus(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.autosignerUrl2));
+        StartCoroutine(db.GetCheckClaimStatus(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.autosignerUrl1, Credentials.autosignerUrl2));
         StartCoroutine(db.GetUserGameId(Credentials.dbUrl, Credentials.GameId, Models.UserId, OnGettingUserInfo));
     }
 
@@ -134,32 +134,5 @@ public class Utils : MonoBehaviour
         ConfirmClaim.SetActive(false);
     }
 
-    
 
-    
-
-    // private void OnHashReceived(string status)
-    // {
-    //     if(status == "true" )
-    //     {
-    //         int _claim = Models.TokensClaim;
-    //         int _state = Models.TokensReq;
-    //         Models.TokensClaim = _claim + _state;
-    //         Models.TokensReq = 0;
-    //     }else if(status == "false" && Models.HashTime - dateNow() > 3600)
-    //     {
-    //         int _score = Models.Score;
-    //         int _state = Models.TokensReq;
-    //         Models.Score = _state + _score;
-    //         Models.TokensReq = 0;
-    //     }
-    //     //DB Post/Patch Claim, TokensReq, Score 
-    // }
-
-    // private static long dateNow (){
-    //     DateTime currentDate = DateTime.UtcNow;
-    //     DateTime epochStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-    //     long epochTime = (long)(currentDate - epochStart).TotalSeconds;
-    //     return epochTime;
-    // }
 }

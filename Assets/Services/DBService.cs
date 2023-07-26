@@ -47,9 +47,28 @@ public class DBService : MonoBehaviour
 		}
     }   
 
-    public IEnumerator GetCheckClaimStatus(string apiUrl, string gameId, string userId, string autosignerUrl2)
+    public IEnumerator GetCheckClaimStatus(string apiUrl, string gameId, string userId, string autosignerUrl1, string autosignerUrl2)
     {
 		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}/claimstatus?autosigner_url={autosignerUrl2}");
+		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
+
+		yield return request.SendWebRequest();
+		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+		{
+			Debug.LogError(request.error);
+			StartCoroutine(GetCheckClaimStatusMainnet(apiUrl, gameId, userId, autosignerUrl1));
+		}
+		else
+		{
+			var jsonData = JSON.Parse(request.downloadHandler.text);
+			string message = jsonData["message"];
+			Debug.Log(jsonData);
+		}
+    }      
+
+	public IEnumerator GetCheckClaimStatusMainnet(string apiUrl, string gameId, string userId, string autosignerUrl1)
+    {
+		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}/claimstatus?autosigner_url={autosignerUrl1}");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
 
 		yield return request.SendWebRequest();
@@ -63,7 +82,7 @@ public class DBService : MonoBehaviour
 			string message = jsonData["message"];
 			Debug.Log(jsonData);
 		}
-    }      
+    } 
 
     public IEnumerator PutDailyScore(string apiUrl, string gameId, string userId, int score)
     {
