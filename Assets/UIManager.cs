@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
 
     public AudioClip firstMusic;
     public AudioClip deathSound;
-    public GameObject claimbutton;
+    public GameObject applyclaim;
     public Utils utils;
 
     public void ShowDeathUI(){
@@ -30,8 +30,8 @@ public class UIManager : MonoBehaviour
     public void DeathUIShown(){
         GM.Audio.SFX(deathSound);
         deathRestartButton.SetActive(true);
-        claimbutton.SetActive(true);
-        claimbutton.GetComponent<Button>().onClick.AddListener(DisableButton);
+        applyclaim.SetActive(true);
+        applyclaim.GetComponent<Button>().onClick.AddListener(DisableButton);
     }
 
     public void Restart(){
@@ -50,6 +50,6 @@ public class UIManager : MonoBehaviour
 
     private void DisableButton()
     {
-        claimbutton.SetActive(false);
+        applyclaim.SetActive(false);
     }
 }

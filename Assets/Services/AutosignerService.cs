@@ -10,7 +10,7 @@ public class AutosignerService : MonoBehaviour
     public IEnumerator GetUser(string Auth, System.Action<string> callback)
     {
 
-		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl2}/users/{Auth}");
+		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl2}/api/v1/users/{Auth}");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 		yield return request.SendWebRequest();
 
@@ -33,7 +33,7 @@ public class AutosignerService : MonoBehaviour
 	public IEnumerator GetUserMainnet(string Auth, System.Action<string> callback)
     {
 
-		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl1}/users/{Auth}");
+		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl1}/api/v1/users/{Auth}");
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 		yield return request.SendWebRequest();
 
@@ -55,7 +55,7 @@ public class AutosignerService : MonoBehaviour
     // ClaimToken when hash is empty
     public IEnumerator DistributeToken(string auth, int amount, System.Action<string> callback){
 		Debug.Log("jj");
-		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl2}/transactions/distribute?TokenId={Credentials.TokenId}&Amount={amount}&Auth={auth}", new WWWForm());
+		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl2}/api/v1/transactions/distribute?TokenId={Credentials.TokenId}&Amount={amount}&Auth={auth}", new WWWForm());
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 
 		yield return request.SendWebRequest();
@@ -76,7 +76,7 @@ public class AutosignerService : MonoBehaviour
 
 	public IEnumerator DistributeTokenMainnet(string auth, int amount, System.Action<string> callback){
 		Debug.Log(amount);
-		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl1}/transactions/distribute?TokenId={Credentials.mainnetTokenId}&Amount={amount}&Auth={auth}", new WWWForm());
+		UnityWebRequest request = UnityWebRequest.Post($"{Credentials.autosignerUrl1}/api/v1/transactions/distribute?TokenId={Credentials.mainnetTokenId}&Amount={amount}&Auth={auth}", new WWWForm());
 		request.SetRequestHeader("Authorization", "Bearer " + Credentials.autosignerBearer);
 
 		yield return request.SendWebRequest();
