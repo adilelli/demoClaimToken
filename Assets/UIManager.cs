@@ -18,6 +18,10 @@ public class UIManager : MonoBehaviour
     public GameObject applyclaim;
     public Utils utils;
 
+    // void Awake()
+    // {
+    //     Destroy(utils);
+    // }
     public void ShowDeathUI(){
         foreach (GameObject boss in GM.I.bosses)
         {

@@ -7,7 +7,10 @@ using UnityEngine.UI;
 using TMPro;
 
 
-// Tokenization Controller
+/// <summary>
+/// All of the relevant functions for Unity Front End are Here
+/// </summary>
+
 public class Utils : MonoBehaviour
 {
     string id;
@@ -36,9 +39,12 @@ public class Utils : MonoBehaviour
         if (id != null){
             Models.Auth = id;
         }
-        // db = gameObject.AddComponent<DBService>();
-        // Models.Auth = id;
     }
+
+    /// <summary>
+    /// Use this at either when press play or at the start of the game 
+    /// </summary>
+
     public void UserLogin()
     {
         asign = gameObject.AddComponent<AutosignerService>(); 
@@ -46,13 +52,20 @@ public class Utils : MonoBehaviour
         StartCoroutine(asign.GetUser(Models.Auth, OnUserReceived));
     }
 
+    /// <summary>
+    /// Use this for pop out for before claim token
+    /// </summary>
+
     public void DecideClaim(){
         int toBeClaimed = Models.Score + Models.PrevScore;
         string _score = toBeClaimed.ToString();
         Points.text = _score;
         ConfirmClaim.SetActive(true);
-        // ConfirmClaim.GetComponent<ConfirmClaim>().onClick.AddListener(DisableMenu);
     }
+
+    /// <summary>
+    /// Use this to claim token after the pop up.
+    /// </summary>
 
     public void ClaimToken()
     {
@@ -64,11 +77,18 @@ public class Utils : MonoBehaviour
             StartCoroutine(asign.DistributeToken(Models.Auth, toBeClaimed, OnClaimReceived));
         }
     }
+    /// <summary>
+    /// Use this at to cancel claim during pop up.
+    /// </summary>
 
     public void Cancel()
     {
         ConfirmClaim.SetActive(false);
     }
+
+    /// <summary>
+    /// Use this at the end of game to record gameplay.
+    /// </summary>
 
     public void EndGameSession(string dbUrl, string gameId, string userId, int currentScore)
     {
@@ -79,7 +99,7 @@ public class Utils : MonoBehaviour
         StartCoroutine(db.PutDailyScore(dbUrl, gameId, userId, Models.Score));
     }
 
-    private void OnUserReceived(string result)
+    private void OnUserReceived(string result, string node)
     {
         if(result == null || result == "")
         {
@@ -87,6 +107,8 @@ public class Utils : MonoBehaviour
         }
         else
         {
+            Credentials.dbUrl = node;
+            Debug.Log(Credentials.dbUrl);
             Models.UserId = result;
             db = gameObject.AddComponent<DBService>();
             StartCoroutine(db.PutLogin(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.TokenId, OnLogin));
@@ -97,7 +119,6 @@ public class Utils : MonoBehaviour
 
     private void OnClaimReceived(string result)
     {
-        
         if(result == null || result == "")
         {
             Message.text = "Error.";
@@ -128,11 +149,5 @@ public class Utils : MonoBehaviour
         Models.PrevScore = prevScore;
         Debug.Log(prevScore);
     }
-
-    private void DisableMenu()
-    {
-        ConfirmClaim.SetActive(false);
-    }
-
 
 }
