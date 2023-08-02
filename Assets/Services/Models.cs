@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Models
 {
-    public static string Auth {get;set;} = "F71D074FDC80B5E01C5E2F873FA8732E1B725F7C6C70437412A113F74B4223D8CD40BE4F18BDBFE4";
+    public static string Auth {get;set;} = "CAB8BFDE6DDF3D6A7D66203FFF8F37A5D22481B9E7868D8A717AEA1D3EB7C205FF79D90F248DC318";
     // public static string Auth {get;set;}
     public static string UserId {get; set;}
     public static int TokensClaim {get;set;}
