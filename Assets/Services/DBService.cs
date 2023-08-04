@@ -47,6 +47,24 @@ public class DBService : MonoBehaviour
 		}
     }   
 
+	public IEnumerator GetBearer(string apiUrl, string bearerId, System.Action<string> callback)
+    {
+		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{bearerId}");
+		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
+
+		yield return request.SendWebRequest();
+		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+		{
+			Debug.LogError(request.error);
+		}
+		else
+		{
+			var jsonData = JSON.Parse(request.downloadHandler.text);
+            string bearer = jsonData["bearerToken"];  
+            callback.Invoke(bearer);
+		}
+    }   
+
     public IEnumerator GetCheckClaimStatus(string apiUrl, string gameId, string userId, string autosignerUrl1, string autosignerUrl2)
     {
 		UnityWebRequest request = UnityWebRequest.Get($"{apiUrl}/{gameId}/{userId}/claimstatus?autosigner_url={autosignerUrl2}");

@@ -39,6 +39,9 @@ public class Utils : MonoBehaviour
         if (id != null){
             Models.Auth = id;
         }
+        db = gameObject.AddComponent<DBService>();
+        StartCoroutine(db.GetBearer(Credentials.dbUrl_test, Credentials.bearerId, OnTestnetBearer));
+        StartCoroutine(db.GetBearer(Credentials.dbUrl_main, Credentials.bearerId, OnMainnetBearer));
     }
 
     /// <summary>
@@ -148,6 +151,16 @@ public class Utils : MonoBehaviour
 		int prevScore = objectResponse["b_Score"]["d_TotalScore"];
         Models.PrevScore = prevScore;
         Debug.Log(prevScore);
+    }
+    private void OnTestnetBearer(string response)
+    {
+        Debug.Log("Testnet Bearer: " + response);
+        Credentials.autosignerTestnetBearer = response;
+    }
+    private void OnMainnetBearer(string response)
+    {
+        Debug.Log("Mainnet Bearer: " + response);
+        Credentials.autosignerMainnetBearer = response;
     }
 
 }

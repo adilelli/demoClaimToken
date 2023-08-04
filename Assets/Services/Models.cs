@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Models
 {
-    public static string Auth {get;set;} = "CAB8BFDE6DDF3D6A7D66203FFF8F37A5D22481B9E7868D8A717AEA1D3EB7C205FF79D90F248DC318";
+    public static string Auth {get;set;} = "E6E1B1FB1D93BA7031D987361D7608866121332A273E7508294AC57DEE2E30DFE5230E9B35DEE855";
     // public static string Auth {get;set;}
     public static string UserId {get; set;}
     public static int TokensClaim {get;set;}
@@ -17,7 +17,9 @@ public static class Models
 
 public static class Credentials
 {
-    public static string autosignerBearer = "xar-K1yKcEICAWuh10ZylQOs-bearer-3AQ3fOPMueqBlJS7f7UH-admin-P1ESJbighL6htWzLvPwX";
+    public static string autosignerTestnetBearer {get;set;}
+    public static string autosignerMainnetBearer {get;set;}
+    public static string bearerId = "~ metx-secure";
     public static string dbBearer {get;set;}
     public static string autosignerUrl2 = "https://xar-autosigner-2.proximaxtest.com";
     public static string autosignerUrl1 = "https://xar-autosigner.proximaxtest.com";
@@ -25,9 +27,9 @@ public static class Credentials
     public static string dbUrl_local = "http://localhost:4000/api/v1";
     public static string dbUrl_test = "https://metx-games-api-demo.vercel.app/api/v1";
     public static string dbUrl_main = "https://metx-games-api-1.vercel.app/api/v1";
-    public static string TokenId {get;set;} = "1D629F5F9BA9D7A5";
-    public static string mainnetTokenId {get; set;} = "6E732F998AD017C3";
-    public static string GameId {get; set;} = "F250E6C24E9B943E";
+    public static string TokenId {get;set;} = "NYT";
+    public static string mainnetTokenId {get; set;} = "NYT";
+    public static string GameId {get; set;} = "BD00108F75C8CEF4";
     public static string testnetNode = "testnet";
     public static string mainnetNode = "mainnet";
 }
