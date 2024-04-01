@@ -63,6 +63,7 @@ public class Utils : MonoBehaviour
         int toBeClaimed = Models.Score + Models.PrevScore;
         string _score = toBeClaimed.ToString();
         Points.text = _score;
+        Message.text = "";
         ConfirmClaim.SetActive(true);
     }
 
@@ -73,6 +74,18 @@ public class Utils : MonoBehaviour
     public void ClaimToken()
     {
         ConfirmClaim.SetActive(false);
+        Debug.Log(Models.Hash);
+        if(Models.Hash == null){
+            asign = gameObject.AddComponent<AutosignerService>();
+            int toBeClaimed = Models.Score + Models.PrevScore;
+            StartCoroutine(asign.DistributeToken(Models.Auth, toBeClaimed, OnClaimReceived));
+        }
+    }
+    /// <summary>
+    /// Use this to directly claim token.
+    /// </summary>
+    public void ClaimTokenDirect()
+    {
         Debug.Log(Models.Hash);
         if(Models.Hash == null){
             asign = gameObject.AddComponent<AutosignerService>();
@@ -95,11 +108,14 @@ public class Utils : MonoBehaviour
 
     public void EndGameSession(string dbUrl, string gameId, string userId, int currentScore)
     {
-        int _score = Models.Score;
-        Models.Score = _score + currentScore;
+        // int _score = Models.Score;
+        Models.Score = currentScore;
         Debug.Log(Models.Score);
         db = gameObject.AddComponent<DBService>();
         StartCoroutine(db.PutDailyScore(dbUrl, gameId, userId, Models.Score));
+        asign = gameObject.AddComponent<AutosignerService>();
+        StartCoroutine(asign.SubmitGameScore(Models.Auth, Models.Score));
+        StartCoroutine(asign.SubmitGameScoreMainnet(Models.Auth, Models.Score));
     }
 
     private void OnUserReceived(string result, string node)
@@ -124,24 +140,32 @@ public class Utils : MonoBehaviour
     {
         if(result == null || result == "")
         {
-            Message.text = "Error.";
+            Message.text = "Loading";
+            // Message.text = msg.ToString();
             asign = gameObject.AddComponent<AutosignerService>();
-            StartCoroutine(asign.DistributeTokenMainnet(Models.Auth, Models.Score, OnClaimReceived));
+            StartCoroutine(asign.DistributeTokenMainnet(Models.Auth, Models.Score + Models.PrevScore, OnClaimReceived));
+        }
+        else if(result == "ERROR")
+        {
+            Message.text = "Error";
         }
         else
         {
             Models.Hash = result;
-            Message.text = "Successs apply for claim. Scan QR to complete transaction. hash: " + result;
+            Message.text = "Successfully claimed. Hash = " + Models.Hash;
             db = gameObject.AddComponent<DBService>();
-            StartCoroutine(db.PutTokensRequest(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score, result));
+            StartCoroutine(db.PutTokensRequest(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score + Models.PrevScore, result));
         }
     }
 
     private void OnLogin(string token)
     {
+        if(Models.UserId == null){
+            Message.text = "You're Not Logged In. Please Log In to save record and Claim Token";
+        }
         Credentials.dbBearer = token;
         Debug.Log(Credentials.dbBearer);
-        StartCoroutine(db.GetCheckClaimStatus(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.autosignerUrl1, Credentials.autosignerUrl2));
+        // StartCoroutine(db.GetCheckClaimStatus(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.autosignerUrl1, Credentials.autosignerUrl2));
         StartCoroutine(db.GetUserGameId(Credentials.dbUrl, Credentials.GameId, Models.UserId, OnGettingUserInfo));
     }
 
@@ -151,15 +175,33 @@ public class Utils : MonoBehaviour
 		int prevScore = objectResponse["b_Score"]["d_TotalScore"];
         Models.PrevScore = prevScore;
         Debug.Log(prevScore);
+        string hash = objectResponse["c_TokensReq"]["b_TxnHash"];
+        Models.Hash = hash;
+        Debug.Log(hash);
+        if(hash != null){
+            StartCoroutine(asign.GetTransactionStatusTestnet(hash, OnTxnStatus));
+            StartCoroutine(asign.GetTransactionStatusMainnet(hash, OnTxnStatus)); 
+        }
+        
+    }
+
+    private void OnTxnStatus(string response)
+    {
+        if(response == "False"){
+            StartCoroutine(db.PutTokensSuccess(Credentials.dbUrl, Credentials.GameId, Models.UserId, "fail"));
+        }else if(response == "True"){
+            StartCoroutine(db.PutTokensSuccess(Credentials.dbUrl, Credentials.GameId, Models.UserId, "success"));
+        }
+        
     }
     private void OnTestnetBearer(string response)
     {
-        Debug.Log("Testnet Bearer: " + response);
+        // Debug.Log("Testnet Bearer: " + response);
         Credentials.autosignerTestnetBearer = response;
     }
     private void OnMainnetBearer(string response)
     {
-        Debug.Log("Mainnet Bearer: " + response);
+        // Debug.Log("Mainnet Bearer: " + response);
         Credentials.autosignerMainnetBearer = response;
     }
 

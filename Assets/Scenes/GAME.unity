@@ -7559,9 +7559,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8462889504144625902, guid: cc0fa82aa56450f4081f041cd8ee4a7d,
         type: 3}
+      propertyPath: utils
+      value: 
+      objectReference: {fileID: 2076649845}
+    - target: {fileID: 8462889504144625902, guid: cc0fa82aa56450f4081f041cd8ee4a7d,
+        type: 3}
       propertyPath: health
       value: 
       objectReference: {fileID: 1904955598}
+    - target: {fileID: 8462889504144625902, guid: cc0fa82aa56450f4081f041cd8ee4a7d,
+        type: 3}
+      propertyPath: Message
+      value: 
+      objectReference: {fileID: 962376454}
     - target: {fileID: 8462889504144625902, guid: cc0fa82aa56450f4081f041cd8ee4a7d,
         type: 3}
       propertyPath: dieClip
@@ -8300,6 +8310,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: confirmclaiming
+      objectReference: {fileID: 0}
+    - target: {fileID: 6713879945808998599, guid: 9b2b978f3293a477486be204a9031df3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6713879947085388266, guid: 9b2b978f3293a477486be204a9031df3,
         type: 3}

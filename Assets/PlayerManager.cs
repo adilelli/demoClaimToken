@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     public PlayerHit hit;
     public PlayerHP health;
     public Utils utils;
+    public TMP_Text Message;
     internal void Hurt(Vector2 direction)
     {
         if(movement.knockBack <= 0 && state.currentState != PlayerState.DEAD){
@@ -37,7 +39,15 @@ public class PlayerManager : MonoBehaviour
         anim.DieAnim();
         state.UpdateState(PlayerState.DEAD);
         movement.enabled = false;
-        utils = gameObject.AddComponent<Utils>();
-        utils.EndGameSession(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score);
+        if(Models.UserId == null)
+        {
+            Message.text = "You're Not Logged In. Please Log In to save record and Claim Token";
+        }
+        else
+        {
+            utils = gameObject.AddComponent<Utils>();
+            utils.EndGameSession(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score);
+        }
+        
     }
 }

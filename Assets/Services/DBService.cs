@@ -135,6 +135,25 @@ public class DBService : MonoBehaviour
 			Debug.Log("success, hash = " + hash);
 		}
     } 
+	//{{api_url}}/{{gameId}}/{{user}}/tokensclaim/success
+	public IEnumerator PutTokensSuccess(string apiUrl, string gameId, string userId, string status)
+    {
+		UnityWebRequest request = UnityWebRequest.Put($"{apiUrl}/{gameId}/{userId}/tokensclaim/{status}", "");
+        // Convert the request body to a byte array
+		request.SetRequestHeader("Authorization", "Bearer " + Credentials.dbBearer);
+
+		yield return request.SendWebRequest();
+		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+		{
+			Debug.LogError(request.error);
+		}
+		else
+		{
+			var jsonData = JSON.Parse(request.downloadHandler.text);
+			var success = jsonData["success"];
+			Debug.Log("success");
+		}
+    } 
 
 }
 
