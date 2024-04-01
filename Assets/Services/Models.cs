@@ -33,4 +33,3 @@ public static class Credentials
     public static string testnetNode = "testnet";
     public static string mainnetNode = "mainnet";
 }
-
