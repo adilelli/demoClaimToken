@@ -46,7 +46,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             utils = gameObject.AddComponent<Utils>();
-            utils.EndGameSession(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score);
+            utils.EndGameSession( Credentials.GameId, Models.UserId, Models.Score);
         }
         
     }

@@ -19,7 +19,6 @@ public class Utils : MonoBehaviour
     public GameObject ConfirmClaim;
 
     private AutosignerService asign;
-    private DBService db;
     private Auth getAuth;
     public TMP_Text Points;
     public TMP_Text Message;
@@ -29,7 +28,6 @@ public class Utils : MonoBehaviour
         Destroy(asign);
         Destroy(getAuth);
         Destroy(asign);
-        Destroy(db);
     }
 
     private void Start()
@@ -39,9 +37,7 @@ public class Utils : MonoBehaviour
         if (id != null){
             Models.Auth = id;
         }
-        db = gameObject.AddComponent<DBService>();
-        StartCoroutine(db.GetBearer(Credentials.dbUrl_test, Credentials.bearerId, OnTestnetBearer));
-        StartCoroutine(db.GetBearer(Credentials.dbUrl_main, Credentials.bearerId, OnMainnetBearer));
+
     }
 
     /// <summary>
@@ -106,19 +102,17 @@ public class Utils : MonoBehaviour
     /// Use this at the end of game to record gameplay.
     /// </summary>
 
-    public void EndGameSession(string dbUrl, string gameId, string userId, int currentScore)
+    public void EndGameSession( string gameId, string userId, int currentScore)
     {
         // int _score = Models.Score;
         Models.Score = currentScore;
         Debug.Log(Models.Score);
-        db = gameObject.AddComponent<DBService>();
-        StartCoroutine(db.PutDailyScore(dbUrl, gameId, userId, Models.Score));
         asign = gameObject.AddComponent<AutosignerService>();
         StartCoroutine(asign.SubmitGameScore(Models.Auth, Models.Score));
         StartCoroutine(asign.SubmitGameScoreMainnet(Models.Auth, Models.Score));
     }
 
-    private void OnUserReceived(string result, string node)
+    private void OnUserReceived(string result)
     {
         if(result == null || result == "")
         {
@@ -126,14 +120,8 @@ public class Utils : MonoBehaviour
         }
         else
         {
-            Credentials.dbUrl = node;
-            Debug.Log(Credentials.dbUrl);
             Models.UserId = result;
-            db = gameObject.AddComponent<DBService>();
-            StartCoroutine(db.PutLogin(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.TokenId, OnLogin));
         }
-        
-        // StartCoroutine(autosigner.GetTransactionHash(OnHashReceived));
     }
 
     private void OnClaimReceived(string result)
@@ -153,8 +141,6 @@ public class Utils : MonoBehaviour
         {
             Models.Hash = result;
             Message.text = "Successfully claimed. Hash = " + Models.Hash;
-            db = gameObject.AddComponent<DBService>();
-            StartCoroutine(db.PutTokensRequest(Credentials.dbUrl, Credentials.GameId, Models.UserId, Models.Score + Models.PrevScore, result));
         }
     }
 
@@ -163,10 +149,6 @@ public class Utils : MonoBehaviour
         if(Models.UserId == null){
             Message.text = "You're Not Logged In. Please Log In to save record and Claim Token";
         }
-        Credentials.dbBearer = token;
-        Debug.Log(Credentials.dbBearer);
-        // StartCoroutine(db.GetCheckClaimStatus(Credentials.dbUrl, Credentials.GameId, Models.UserId, Credentials.autosignerUrl1, Credentials.autosignerUrl2));
-        StartCoroutine(db.GetUserGameId(Credentials.dbUrl, Credentials.GameId, Models.UserId, OnGettingUserInfo));
     }
 
     private void OnGettingUserInfo(string response)
@@ -187,21 +169,19 @@ public class Utils : MonoBehaviour
 
     private void OnTxnStatus(string response)
     {
-        if(response == "False"){
-            StartCoroutine(db.PutTokensSuccess(Credentials.dbUrl, Credentials.GameId, Models.UserId, "fail"));
-        }else if(response == "True"){
-            StartCoroutine(db.PutTokensSuccess(Credentials.dbUrl, Credentials.GameId, Models.UserId, "success"));
-        }
+        // if(response == "False"){
+        //     StartCoroutine(db.PutTokensSuccess(Credentials.dbUrl, Credentials.GameId, Models.UserId, "fail"));
+        // }else if(response == "True"){
+        //     StartCoroutine(db.PutTokensSuccess(Credentials.dbUrl, Credentials.GameId, Models.UserId, "success"));
+        // }
         
     }
     private void OnTestnetBearer(string response)
     {
-        // Debug.Log("Testnet Bearer: " + response);
         Credentials.autosignerTestnetBearer = response;
     }
     private void OnMainnetBearer(string response)
     {
-        // Debug.Log("Mainnet Bearer: " + response);
         Credentials.autosignerMainnetBearer = response;
     }
 
