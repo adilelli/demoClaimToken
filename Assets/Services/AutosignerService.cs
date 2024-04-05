@@ -7,7 +7,7 @@ using SimpleJSON;
 public class AutosignerService : MonoBehaviour
 {
     // Update Models.id
-    public IEnumerator GetUser(string Auth, System.Action<string, string> callback)
+    public IEnumerator GetUser(string Auth, System.Action<string> callback)
     {
 
 		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl2}/api/v1/users/{Auth}");
@@ -19,18 +19,18 @@ public class AutosignerService : MonoBehaviour
 			Debug.Log(Auth);
 			Debug.LogError(request.error, this);
 			string username = null;
-			callback.Invoke(username, Credentials.dbUrl_test);
+			callback.Invoke(username);
 		}
 		else
 		{
 			var jsonData = JSON.Parse(request.downloadHandler.text);
 			string username = jsonData["username"];
 			Debug.Log(username);
-			callback.Invoke(username, Credentials.dbUrl_test);
+			callback.Invoke(username);
         }
     }
 
-	public IEnumerator GetUserMainnet(string Auth, System.Action<string, string> callback)
+	public IEnumerator GetUserMainnet(string Auth, System.Action<string> callback)
     {
 
 		UnityWebRequest request = UnityWebRequest.Get($"{Credentials.autosignerUrl1}/api/v1/users/{Auth}");
@@ -47,7 +47,7 @@ public class AutosignerService : MonoBehaviour
 			var jsonData = JSON.Parse(request.downloadHandler.text);
 			string username = jsonData["username"];
 			Debug.Log(username);
-			callback.Invoke(username, Credentials.dbUrl_main);
+			callback.Invoke(username);
         }
     }
 
@@ -99,7 +99,7 @@ public class AutosignerService : MonoBehaviour
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
 		{
-			Debug.LogError(request.error);
+			Debug.Log(request.error);
 		}
 		else
 		{
@@ -116,7 +116,7 @@ public class AutosignerService : MonoBehaviour
 		yield return request.SendWebRequest();
 		if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
 		{
-			Debug.LogError(request.error);
+			Debug.Log(request.error);
 		}
 		else
 		{
